@@ -7,10 +7,10 @@ namespace HelloDotNet
     class Hello
     {
         // Set SdkKey to your LaunchDarkly SDK key.
-        public const string SdkKey = "sdk-cd55c3c7-907e-463b-bcb9-06c2b48c7e55";
+        public const string SdkKey = "Write you key value";
 
         // Set FeatureFlagKey to the feature flag key you want to evaluate.
-        public const string FeatureFlagKey = "assess_viewschedulingdetails_orderlisting";
+        public const string FeatureFlagKey = "write you flag value";
 
         private static void ShowMessage(string s) {
             Console.WriteLine("*** " + s);
@@ -35,12 +35,12 @@ namespace HelloDotNet
             }
 
             var context = User.Builder("user-key")
-                .Name("atul")
+                .Name("Name")
                 .Build();
 
             var flagValue = client.BoolVariation(FeatureFlagKey, context, false);
 
-            ShowMessage(string.Format("Feature flag '{0}' is {1} for this context",
+            ShowMessage(string.Format("Feature flag '{0}' is {1}",
                 FeatureFlagKey, flagValue));
 
             client.Dispose();

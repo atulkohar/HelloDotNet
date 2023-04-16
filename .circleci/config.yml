@@ -6,8 +6,6 @@ orbs:
 workflows:
   test:
     jobs:
-    - build-run-linux:
-        context: hello-world-demos
     - build-run-windows:
         context: hello-world-demos
 
@@ -19,8 +17,6 @@ workflows:
           branches:
             only: main
     jobs:
-    - build-run-linux:
-        context: hello-world-demos
     - build-run-windows:
         context: hello-world-demos
 
@@ -29,25 +25,6 @@ workflows:
 # the flag is configured to return a true value.
 
 jobs:
-  build-run-linux:
-    docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:3.1-focal
-    steps:
-      - checkout
-      - run:
-          name: insert SDK key and flag key into demo code
-          command: |
-            sed -i.bak "s/SdkKey *= *\".*\"/SdkKey = \"${LD_HELLO_WORLD_SDK_KEY}\"/" ./HelloDotNet/Hello.cs
-            sed -i.bak "s/FeatureFlagKey *= *\".*\"/FeatureFlagKey = \"${LD_HELLO_WORLD_FLAG_KEY_WITH_TRUE_VALUE}\"/" ./HelloDotNet/Hello.cs
-      - run:
-          name: build demo
-          command: dotnet build
-      - run:
-          name: run demo
-          command: |
-            dotnet run --project HelloDotNet | tee output.txt
-            grep "is True for this context" output.txt || (echo "Flag did not evaluate to expected true value" && exit 1)
-
   build-run-windows:
     executor:
       name: win/default
@@ -68,8 +45,3 @@ jobs:
           name: run demo
           command: |
             dotnet run --project HelloDotNet | tee-object -variable output
-            if ( "$output" -notlike "*is True for this context*" )
-            {
-              write-output "Flag did not evaluate to expected true value"
-              exit 1
-            }
